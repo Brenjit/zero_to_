@@ -17,3 +17,4 @@ dependencies:
     - photutils<1.7.0
     - opencv-python-headless
     - numpy<2
+
