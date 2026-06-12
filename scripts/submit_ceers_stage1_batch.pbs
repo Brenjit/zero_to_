@@ -1,0 +1,42 @@
+#!/bin/bash
+#PBS -N JWST_Stage1_CEERS
+#PBS -P hpc2601012
+#PBS -q project
+#PBS -l select=1:ncpus=4:mem=64gb
+#PBS -l walltime=12:00:00
+#PBS -o stage1_job.out
+#PBS -e stage1_job.err
+
+# ---------------------------------------------------------
+# SETUP ENVIRONMENT
+# ---------------------------------------------------------
+# Navigate to the base Level_zero directory (modify if needed)
+# Assuming you submit from /home/chazarika.brenjit/Brenjit/Level_zero/scripts/
+cd $PBS_O_WORKDIR
+cd ..
+
+echo "Starting JWST Stage 1 Batch Reduction on Pegasus"
+echo "Running on node: $(hostname)"
+echo "Current directory: $(pwd)"
+echo "Date: $(date)"
+
+# Load your conda/JWST environment here (replace 'jwst_env' with your actual environment name)
+source $HOME/anaconda3/etc/profile.d/conda.sh
+conda activate jwst_pipeline_185
+
+# IMPORTANT: Set JWST CRDS variables
+# Ensure this path points to your actual CRDS cache on Pegasus
+export CRDS_PATH=$HOME/crds_cache
+export CRDS_SERVER_URL=https://jwst-crds.stsci.edu
+
+echo "CRDS_PATH: $CRDS_PATH"
+echo "CRDS_SERVER_URL: $CRDS_SERVER_URL"
+echo "---------------------------------------------------------"
+
+# ---------------------------------------------------------
+# EXECUTE STAGE 1 BATCH SCRIPT
+# ---------------------------------------------------------
+python scripts/run_ceers_stage1_batch.py
+
+echo "---------------------------------------------------------"
+echo "Job finished at: $(date)"
